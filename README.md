@@ -149,7 +149,13 @@ input('...')
 
 #### Street Fighters ####
 
-Gym Retro games had actions space or sample but you can create agentQueue for the same purpose. ( The games introduced background layers problem will discuss about it later )
+Gym Retro games had actions space or sample but you can create agentQueue for the same purpose. ( The games introduced background layers problems will discuss them later )
 
 ![Street Fighters Play](
 https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Street%20Fighters%20as%20sample.gif "Street Fighters Play")
+
+#### Mario Bros ####
+
+Mario Bros is a more simple problem for solving but it is equipped by equation expression with stage time elapsed problems.
+
+![Mario Bros](https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Marios%20Bros.gif "Mario Bros")
