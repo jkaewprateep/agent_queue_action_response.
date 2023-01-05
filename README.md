@@ -149,7 +149,7 @@ input('...')
 
 #### Street Fighters ####
 
-Gym Retro games they had actions space or sample but you can create agentQueue for same purpose.
+Gym Retro games had actions space or sample but you can create agentQueue for the same purpose. ( The games introduced background layers problem will discuss about it later )
 
 ![Street Fighters Play](
 https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Street%20Fighters%20as%20sample.gif "Street Fighters Play")
