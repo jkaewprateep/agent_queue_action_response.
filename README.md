@@ -14,7 +14,15 @@ For solving the problems you need to list down the question challenges
 4. You can consume the food for adding scores or new gameplay for minus scores.
 
 🧸💬 You see the wall rules, AI request for possible actions from possible actions ```{ NONE | LEFT | RIGHT | UP | DOWN }```
+```
+🔍 No wall free for all { ⬆️, ➡️, ⬅️, ⬇️ }
+🔍 Left wall { ⬆️, ➡️, ⬇️ }, { ⬆️, ⬇️ }, { ⬇️ }, { ⬆️ }
+🔍 Right wall { ⬆️, ⬅️, ⬇️ }, { ⬆️, ⬇️ }, { ⬇️ }, { ⬆️ }
+🔍 Top wall { ➡️, ⬅️, ⬇️ }, { ➡️, ⬅️ }, { ➡️ }, { ➡️ }
+🔍 Buttom wall { ⬆️, ➡️, ⬅️ }, { ➡️, ⬅️ }, { ➡️ }, { ➡️ }
+```
 
+## Sample Codes ##
 ```
 def request_possible_action( self ):
 	
