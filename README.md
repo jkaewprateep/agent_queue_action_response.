@@ -147,4 +147,9 @@ input('...')
 
 ![Play](https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Snank_AI_vs_Random_10_minutes.gif "Play")
 
+#### Street Fighters ####
 
+Gym Retro games they had actions space or sample but you can create agentQueue for same purpose.
+
+![Street Fighters Play](
+https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Street%20Fighters%20as%20sample.gif "Street Fighters Play")
