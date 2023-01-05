@@ -23,6 +23,9 @@ For solving the problems you need to list down the question challenges
 ```
 
 ## Sample Codes ##
+
+AgentQueue benefits from codes and calculation by removing fewer scores active from a possible list than adding it in that you need multiple lines of list append or assignments.
+
 ```
 def request_possible_action( self ):
 	
