@@ -119,10 +119,6 @@ class AgentQueue:
 		# ( none, left, down, right, up )
 		# ( 0, 0, 0, 0, 0 )
 		"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-	
-		# print( 'stage_position: ' + str( stage_position ) )
-	
-		# temp_action = [['left'], ['down'], ['right'], ['up']]
 		list_actions = [['left'], ['down'], ['right'], ['up']]
 		
 		if stage_position[2] <= 25.0 : 
@@ -148,14 +144,9 @@ class AgentQueue:
 		if stage_position[3] <= 25.0 and snake_head_x == self.previous_snake_head_x: 
 			list_actions.remove( ['up'] )
 		###
-			
-		# print( list_actions )
-	
-	
+
 		( idx_1, idx_2, idx_3, idx_4 ) = ( 0, 0, 0, 0 )
-		# idx_2 = 0
-		# idx_3 = 0
-		# idx_4 = 0
+
 		if ['left'] in list_actions :
 			idx_1 = 1
 		if ['down'] in list_actions :
@@ -164,203 +155,11 @@ class AgentQueue:
 			idx_3 = 1
 		if ['up'] in list_actions :
 			idx_4 = 1
-	
-		# x = [ x for a, b, c, d in temp_action ]
-		# [['left'], ['right'], ['down']]
-	
-		# print( x )
 		
 		self.previous_snake_head_x = snake_head_x
 		self.previous_snake_head_y = snake_head_y
 	
 		possible_actions = [ 0, idx_1, idx_2, idx_3, idx_4 ]
-		
-		# action = self.random_action( possible_actions )
-		# return action
-	
-		# if ( stage_position[2] >= 485.0 and stage_position[3] >= 45.0  ):
-			# print( 'condition 1: { up, down }' )
-			
-			# possible_actions = ( 0, 0, 1, 0, 1 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-			
-		# elif ( stage_position[2] >= 485.0 and stage_position[3] < 45.0  ):
-			# print( 'condition 2: { left }' )
-			
-			# possible_actions = ( 0, 1, 0, 0, 0 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-		
-		# elif ( stage_position[2] <= 25.0 and stage_position[3] >= 488.0  ):
-			# print( 'condition 3: { right }' )
-			
-			# possible_actions = ( 0, 0, 0, 1, 0 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-		
-		# elif ( stage_position[2] <= 25.0 and stage_position[3] >= 45.0  ):
-			# print( 'condition 3: { up, right }' )
-			
-			# possible_actions = ( 0, 0, 0, 1, 1 )
-			# possible_actions = ( 0, 0, 0, 0, 1 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-		
-		# elif ( stage_position[2] <= 25.0 and stage_position[3] < 45.0  ):
-			# print( 'condition 3: { up }' )
-			
-			# possible_actions = ( 0, 0, 0, 0, 1 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-			
-		# elif ( stage_position[2] >= 470.0 and stage_position[3] > 490.0  ):
-			# print( 'condition 4: { down }' )
-			
-			# possible_actions = ( 0, 0, 1, 0, 0 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-			
-		# elif ( stage_position[3] < 45.0  ):
-			# print( 'condition 2: { left }' )
-			
-			# possible_actions = ( 0, 1, 0, 0, 0 )
-			# action = self.random_action( possible_actions )
-			
-			# return action
-			
-		# elif ( stage_position[2] <= 45.0 ):
-			# print( 'condition 2' )
-			
-		# elif ( stage_position[3] >= 485.0 and stage_position[2] < 485.0 ):
-			# print( 'condition 3: { right, down }' )
-			
-		# elif ( stage_position[3] >= 485.0 ):
-			# print( 'condition 4' )
-			
-		# elif ( stage_position[2] >= 25.0 and stage_position[3] <= 488.0 ):
-			# print( 'condition 5: { left, down }' )
-			
-		# elif ( stage_position[2] < 488.0 and stage_position[3] <= 488.0 ):
-			# print( 'condition 2: { left, up }' )
-
-		# if ( stage_position[2] >= 485.0 and stage_position[3] <= 45.0 ):
-			# print( 'condition 1' )
-			
-			# possible_actions = ( 0, 1, 0, 0, 0 )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# action = self.random_action( possible_actions )
-			
-			# return action
-			
-		# elif ( stage_position[2] <= 5.0 and stage_position[3] <= 45.0 ):
-			# print( 'condition 2' )
-			# possible_actions = ( 0, 0, 0, 0, 1 )
-			
-			# if snake_head_y < self.previous_snake_head_y :
-				# possible_actions = ( 0, 0, 0, 1, 1 )
-				
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
-			
-		# elif ( stage_position[3] >= 488.0 and stage_position[2] <= 5.0 ):
-			# print( 'condition 3' )
-			# possible_actions = ( 0, 0, 0, 1, 0 )
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action	
-			
-		# elif ( stage_position[3] <= 45.0 and stage_position[2] < 485.0 and stage_position[2] > 15.0 ):
-			# print( 'condition 4' )
-			# possible_actions = ( 0, 1, 0, 0, 0 )
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
-			
-		# elif ( stage_position[2] >= 485.0 ):
-			# print( 'condition 5' )
-			# possible_actions = ( 0, 0, 1, 0, 1 )
-			
-			# if self.previous_snake_head_y > snake_head_y :
-				# possible_actions = ( 0, 1, 1, 0, 1 )
-				
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
-			
-		# elif ( stage_position[3] >= 488.0 ):
-			# print( 'condition 6' )
-			# possible_actions = ( 0, 1, 0, 1, 0 )
-			
-			# if snake_head_x > self.previous_snake_head_x  :
-				# possible_actions = ( 0, 1, 1, 1, 0 )
-				
-			# action = self.random_action( possible_actions )
-
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
-			
-		# elif ( stage_position[2] <= 5.0 ):
-			# print( 'condition 7' )
-			# possible_actions = ( 0, 0, 1, 0, 1 )
-			
-			# if snake_head_y > self.previous_snake_head_y :
-				# possible_actions = ( 0, 0, 1, 1, 1 )
-				
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
-			
-		# elif ( stage_position[3] <= 45.0 ):
-			# print( 'condition 8' )
-			# possible_actions = ( 0, 1, 0, 1, 0 )
-			
-			# if self.previous_snake_head_y > snake_head_y :
-				# possible_actions = ( 0, 1, 0, 1, 1 )
-			
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
-			
-		# elif ( stage_position[2] > 10.0 and stage_position[2] < 485.0 and stage_position[3] > 45.0 and stage_position[3] < 488.0 ):
-			# print( 'free condition' )
-			# possible_actions = ( 1, 1, 1, 1, 1 )
-			# action = self.random_action( possible_actions )
-			
-			# self.previous_snake_head_x = snake_head_x
-			# self.previous_snake_head_y = snake_head_y
-			
-			# return action
 	
 		return possible_actions
 		
