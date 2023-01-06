@@ -45,6 +45,19 @@ def request_possible_action( self ):
     # stage_position = ( 0, 5, 512, 512 - 5, 512 - 512 )	# ==> right and down			( 0, 0, 1, 1, 0 )	
     # stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )	# ==> left and down			( 0, 1, 1, 0, 0 )	
     # stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )	# ==> left and up			( 0, 1, 0, 0, 1 )
+    
+    if snake_head_x == self.previous_snake_head_x and snake_head_y <= 35 : 
+        stage_position[4] = 0
+    if snake_head_x == self.previous_snake_head_x and snake_head_y >= 512 - 35 : 
+        stage_position[2] = 0
+			
+    if snake_head_y == self.previous_snake_head_y and snake_head_x <= 35 : 
+        stage_position[3] = 0
+    if snake_head_y == self.previous_snake_head_y and snake_head_x >= 512 - 35 : 
+        stage_position[1] = 0
+		
+    self.previous_snake_head_x = snake_head_x
+    self.previous_snake_head_y = snake_head_y
 
     return stage_position
 ```
