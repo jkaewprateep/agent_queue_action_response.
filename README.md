@@ -1,4 +1,4 @@
-# agent_queue_action_response.
+# agent_queue_action_response ( Single Simultaneous ).
 
 For Study Agent Queue responses, factorials or stateless conditions is almost similar when you had both stage conditions and game play conditions, and each time request at critical conditions response may change according to the stage conditions but it does not effect AI game play conditions. Sample request for none rims possible actions return ```{ NONE | LEFT | RIGHT | UP | DOWN }``` when you are almost the right corners return ```{ NONE | UP | DOWN }``` and ```{ NONE | LEFT | UP | DOWN }```.
 
