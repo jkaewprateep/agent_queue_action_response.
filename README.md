@@ -112,7 +112,7 @@ def request_possible_action( self ):
 ```
 ## Sample Outputs ##
 
-It is possible to send the stage rules to AI but it is AI decisions where you applied scores based, time scales, or algorithms and it is no guarantee that AI will follow your rules.
+It is possible to send the stage rules to AI but it is AI decisions where you applied scores based, time scales, or algorithms and it is no guarantee that AI will follow your rules the AI will select from their learing not fixed conditions that is valid in the competitions.
 
 ```
 possible_actions: [0, 1, 1, 1, 1]
@@ -170,8 +170,9 @@ input('...')
 | File Name | Description |
 --- | --- |
 | sample.py | sample codes |
-| Snake_stage_rims_start_learn_01.gif |data12|
-| Snank_AI_vs_Random_10_minutes.gif |data12|
+| Snake_1_minute_learning.gif | result from staeless actions learning |
+| Snake_stage_rims_start_learn_01.gif | result from previous method v.s. random |
+| Snank_AI_vs_Random_10_minutes.gif | result from previous method v.s. random |
 | README.md | readme file |
 
 ## Results ##
@@ -179,6 +180,12 @@ input('...')
 #### Stage conditions ####
 
 ![Stage conditions](https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Snake_stage_rims_start_learn_01.gif "Stage conditions")
+
+#### Stateless conditions ####
+
+The AI fast learning away from invalids actions within 1 minute ( learning time randoms )
+
+![Stateless conditions](https://github.com/jkaewprateep/agent_queue_action_response./blob/main/Snake_1_minute_learning.gif "Stateless conditions")
 
 #### Randoms play ####
 
