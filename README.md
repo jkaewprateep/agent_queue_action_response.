@@ -142,7 +142,7 @@ input('...')
 ## Files and Directory ##
 
 | File Name | Description |
---- | --- |
+|--- | --- |
 | sample.py | sample codes |
 | Snake_1_minute_learning.gif | result from staeless actions learning |
 | Snake_stage_rims_start_learn_01.gif | result from previous method v.s. random |
