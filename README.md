@@ -110,6 +110,22 @@ def request_possible_action( self ):
 
     return possible_actions
 ```
+## Sample Outputs ##
+
+It is possible to send the stage rules to AI but it is AI decisions where you applied scores based, time scales, or algorithms and it is no guarantee that AI will follow your rules.
+
+```
+possible_actions: [0, 1, 1, 1, 1]
+possible_actions: [0, 1, 1, 1, 1]
+possible_actions: [0, 1, 1, 1, 1]
+possible_actions: [0, 1, 1, 1, 1]
+possible_actions: [0, 1, 1, 1, 1]
+possible_actions: [0, 1, 0, 1, 1]
+possible_actions: [0, 1, 0, 1, 1]
+possible_actions: [0, 1, 0, 1, 1]
+possible_actions: [0, 1, 0, 1, 1]
+possible_actions: [0, 1, 0, 1, 1]
+```
 
 ## Tasks Running ##
 
