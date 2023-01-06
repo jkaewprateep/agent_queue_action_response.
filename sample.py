@@ -252,10 +252,9 @@ class AgentQueue:
 		model = tf.keras.models.Sequential([
 			tf.keras.layers.InputLayer(input_shape=input_shape),
 			
-			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences=True, return_state=False)),
-			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences=True)),
+			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True, return_state=False)),
+			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True)),
 			
-			tf.keras.layers.Dense(256, activation='relu'),
 			tf.keras.layers.Dense(256, activation='relu'),
 		])
 				
@@ -265,6 +264,13 @@ class AgentQueue:
 		model.summary()
 		
 		model.compile(optimizer=self.optimizer, loss=self.lossfn, metrics=['accuracy'])
+		
+		
+		if exists( self.checkpoint_path ) :
+			model.load_weights( self.checkpoint_path )
+			print("model load: " + self.checkpoint_path)
+			input("Press Any Key!")
+			
 		self.model = model
 
 		return model
@@ -303,8 +309,15 @@ class AgentQueue:
 		food_y = self.read_current_state('food_y')
 		
 		possible_actions = self.request_possible_action()
+		possible_actionname = []
 		
-		print( 'possible_actions: ' + str( possible_actions ) )
+		list_actions = [['none'], ['left'], ['down'], ['right'], ['up']]
+		
+		for i in range( len( possible_actions ) ) :
+			if possible_actions[i] == 1 :
+				possible_actionname.append( list_actions[i] )
+		
+		print( 'possible_actions: ' + str( possible_actions ) + " to actions: " + str( possible_actionname ) )
 		
 		distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
 		
@@ -321,9 +334,9 @@ class AgentQueue:
 		contr11 = 1
 		contr12 = 1
 		contr13 = 1
-		contr14 = 1
-		contr15 = 1
-		contr16 = self.steps + ( 10 * reward )
+		contr14 = snake_head_x - food_x
+		contr15 = snake_head_y - food_y
+		contr16 = self.steps + gamescores
 		
 		list_input.append( contrl )
 		list_input.append( contr2 )
@@ -425,6 +438,8 @@ for i in range(nb_frames):
 
 	action = AgentQueue.predict_action()
 	action_from_list = list(actions.values())[action]
+	
+	print( "Seleted: " + str( list(actions.items())[action] ) )
 	
 	reward = p.act( action_from_list )
 	gamescores = gamescores + 5 * reward
