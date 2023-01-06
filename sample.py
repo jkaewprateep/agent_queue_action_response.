@@ -122,27 +122,51 @@ class AgentQueue:
 		list_actions = [['left'], ['down'], ['right'], ['up']]
 		
 		if stage_position[2] <= 25.0 : 
-			list_actions.remove( ['left'] )
+			try:
+				list_actions.remove( ['left'] )
+			except:
+				pass
 		if stage_position[2] >= 488.0 : 
-			list_actions.remove( ['right'] )
+			try:
+				list_actions.remove( ['right'] )
+			except:
+				pass
 		
 		###
 		if stage_position[2] >= 488.0 and snake_head_y == self.previous_snake_head_y: 
-			list_actions.remove( ['left'] )
+			try:
+				list_actions.remove( ['left'] )
+			except:
+				pass
 		if stage_position[2] <= 25.0 and snake_head_y == self.previous_snake_head_y: 
-			list_actions.remove( ['right'] )
+			try:
+				list_actions.remove( ['right'] )
+			except:
+				pass
 		###
 
 		if stage_position[3] <= 25.0 : 
-			list_actions.remove( ['down'] )
+			try:
+				list_actions.remove( ['down'] )
+			except:
+				pass
 		if stage_position[3] >= 488.0 : 
-			list_actions.remove( ['down'] )
+			try:
+				list_actions.remove( ['down'] )
+			except:
+				pass
 			
 		###
 		if stage_position[3] >= 488.0 and snake_head_x == self.previous_snake_head_x: 
-			list_actions.remove( ['down'] )
+			try:
+				list_actions.remove( ['down'] )
+			except:
+				pass
 		if stage_position[3] <= 25.0 and snake_head_x == self.previous_snake_head_x: 
-			list_actions.remove( ['up'] )
+			try:
+				list_actions.remove( ['up'] )
+			except:
+				pass
 		###
 
 		( idx_1, idx_2, idx_3, idx_4 ) = ( 0, 0, 0, 0 )
