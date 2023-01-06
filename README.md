@@ -147,6 +147,8 @@ input('...')
 | Snake_1_minute_learning.gif | result from staeless actions learning |
 | Snake_stage_rims_start_learn_01.gif | result from previous method v.s. random |
 | Snank_AI_vs_Random_10_minutes.gif | result from previous method v.s. random |
+| Street Fighters as sample.gif | AI Learning, single simultaneous |
+| Marios Bros.gif | AI Learning, single simultaneous |
 | README.md | readme file |
 
 ## Results ##
