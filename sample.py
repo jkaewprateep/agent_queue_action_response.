@@ -306,6 +306,9 @@ class AgentQueue:
 		self.reward = reward
 		self.gamescores = gamescores
 		
+		if self.reward < 0 :
+			self.steps = 0
+		
 		list_input = []
 	
 		snake_head_x = self.read_current_state('snake_head_x')
@@ -317,21 +320,21 @@ class AgentQueue:
 		
 		distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
 		
-		contrl = snake_head_x
-		contr2 = snake_head_y
-		contr3 = food_x
-		contr4 = food_y
-		contr5 = float(self.DATA[-1:,:,:,0:1])
-		contr6 = float(self.DATA[-1:,:,:,1:2])
-		contr7 = distance
-		contr8 = float(self.DATA[-1:,:,:,7:8])
-		contr9 = float(self.DATA[-1:,:,:,9:10])
-		contr10 = possible_actions[0]
-		contr11 = possible_actions[1]
-		contr12 = possible_actions[2]
-		contr13 = possible_actions[3]
-		contr14 = possible_actions[4]
-		contr15 = 1
+		contrl = possible_actions[0]
+		contr2 = possible_actions[1]
+		contr3 = possible_actions[2]
+		contr4 = possible_actions[3]
+		contr5 = possible_actions[4]
+		contr6 = 1
+		contr7 = 1
+		contr8 = 1
+		contr9 = 1
+		contr10 = 1
+		contr11 = 1
+		contr12 = 1
+		contr13 = 1
+		contr14 = 1
+		contr15 = self.steps * reward
 		contr16 = self.gamescores
 		
 		list_input.append( contrl )
