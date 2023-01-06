@@ -29,35 +29,24 @@ AgentQueue benefits from codes and calculation by removing fewer scores active f
 ```
 def request_possible_action( self ):
 	
-	( width, height ) = self.PLE.getScreenDims()
+    ( width, height ) = self.PLE.getScreenDims()
 	
-	snake_head_x = self.read_current_state( 'snake_head_x' )
-	snake_head_y = self.read_current_state( 'snake_head_y' )
+    snake_head_x = self.read_current_state( 'snake_head_x' )
+    snake_head_y = self.read_current_state( 'snake_head_y' )
 	
-	
-	possible_actions = ( 1, 1, 1, 1, 1 )
-	action = 0
-	
-	"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-	# ( width, height, snake_head_x, snake_head_y )
-	# {'none_1': 104, 'left_1': 97, 'down_1': 115, 'right1': 100, 'up___1': 119}
-	
-	# ( none, left, down, right, up )
-	# ( 0, 0, 0, 0, 0 )
-	"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    possible_actions = ( 1, 1, 1, 1, 1 )
+    action = 0
+    
+    stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y )
+    stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([5, ]))], [1], [0]).numpy()[0]
 
-	stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y )
-	stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([5, ]))], [1], [0]).numpy()[0]
+    # list_actions = [['left'], ['down'], ['right'], ['up']]
+    # stage_position = ( 0, 5, 5, 512 - 5, 512 - 5 )		# ==> right and up			( 0, 0, 0, 1, 1 )	
+    # stage_position = ( 0, 5, 512, 512 - 5, 512 - 512 )	# ==> right and down			( 0, 0, 1, 1, 0 )	
+    # stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )	# ==> left and down			( 0, 1, 1, 0, 0 )	
+    # stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )	# ==> left and up			( 0, 1, 0, 0, 1 )
 
-
-
-	# list_actions = [['left'], ['down'], ['right'], ['up']]
-	# stage_position = ( 0, 5, 5, 512 - 5, 512 - 5 )								# ==> right and up			( 0, 0, 0, 1, 1 )	
-	# stage_position = ( 0, 5, 512, 512 - 5, 512 - 512 )							# ==> right and down		( 0, 0, 1, 1, 0 )	
-	# stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )						# ==> left and down			( 0, 1, 1, 0, 0 )	
-	# stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )							# ==> left and up			( 0, 1, 0, 0, 1 )
-
-	return stage_position
+    return stage_position
 ```
 ## Sample Outputs ##
 
