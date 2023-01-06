@@ -127,6 +127,29 @@ possible_actions: [0, 1, 0, 1, 1]
 possible_actions: [0, 1, 0, 1, 1]
 ```
 
+## Controls ##
+
+Simply controls AI selected move actions, continuous number is primary when using internal sequence summary ``` self.steps + gamescores ``` and input possible actions with conditions ```snake_head_x - food_x``` and ```snake_head_y - food_y``` .
+
+```
+contrl = possible_actions[0] * 5
+contr2 = possible_actions[1] * 5
+contr3 = possible_actions[2] * 5
+contr4 = possible_actions[3] * 5
+contr5 = possible_actions[4] * 5
+contr6 = 1
+contr7 = 1
+contr8 = 1
+contr9 = 1
+contr10 = 1
+contr11 = 1
+contr12 = 1
+contr13 = 1
+contr14 = snake_head_x - food_x
+contr15 = snake_head_y - food_y
+contr16 = self.steps + gamescores
+```
+
 ## Tasks Running ##
 
 Simply as an AgentQueue class method you can implement as templates for many games or actions.
