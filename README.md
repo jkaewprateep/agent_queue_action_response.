@@ -18,8 +18,8 @@ For solving the problems you need to list down the question challenges
 🔍 No wall free for all { ⬆️, ➡️, ⬅️, ⬇️ }
 🔍 Left wall { ⬆️, ➡️, ⬇️ }, { ⬆️, ⬇️ }, { ⬇️ }, { ⬆️ }
 🔍 Right wall { ⬆️, ⬅️, ⬇️ }, { ⬆️, ⬇️ }, { ⬇️ }, { ⬆️ }
-🔍 Top wall { ➡️, ⬅️, ⬇️ }, { ➡️, ⬅️ }, { ➡️ }, { ➡️ }
-🔍 Buttom wall { ⬆️, ➡️, ⬅️ }, { ➡️, ⬅️ }, { ➡️ }, { ➡️ }
+🔍 Top wall { ➡️, ⬅️, ⬇️ }, { ➡️, ⬅️ }, { ⬅️ }, { ➡️ }
+🔍 Buttom wall { ⬆️, ➡️, ⬅️ }, { ➡️, ⬅️ }, { ⬅️ }, { ➡️ }
 ```
 
 ## Sample Codes ##
