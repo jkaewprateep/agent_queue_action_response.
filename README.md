@@ -29,86 +29,35 @@ AgentQueue benefits from codes and calculation by removing fewer scores active f
 ```
 def request_possible_action( self ):
 	
-    ( width, height ) = self.PLE.getScreenDims()
+	( width, height ) = self.PLE.getScreenDims()
 	
-    snake_head_x = self.read_current_state( 'snake_head_x' )
-    snake_head_y = self.read_current_state( 'snake_head_y' )
+	snake_head_x = self.read_current_state( 'snake_head_x' )
+	snake_head_y = self.read_current_state( 'snake_head_y' )
 	
-    stage_position = ( width, height, snake_head_x, snake_head_y )
-    possible_actions = ( 1, 1, 1, 1, 1 )
-    action = 0
 	
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    # ( width, height, snake_head_x, snake_head_y )
-    # {'none_1': 104, 'left_1': 97, 'down_1': 115, 'right1': 100, 'up___1': 119}
+	possible_actions = ( 1, 1, 1, 1, 1 )
+	action = 0
 	
-    # ( none, left, down, right, up )
-    # ( 0, 0, 0, 0, 0 )
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-	list_actions = [['left'], ['down'], ['right'], ['up']]
+	"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+	# ( width, height, snake_head_x, snake_head_y )
+	# {'none_1': 104, 'left_1': 97, 'down_1': 115, 'right1': 100, 'up___1': 119}
 	
-    if stage_position[2] <= 25.0 : 
-        try:
-            list_actions.remove( ['left'] )
-        except:
-            pass
-    if stage_position[2] >= 488.0 : 
-        try:
-            list_actions.remove( ['right'] )
-        except:
-            pass
-	
-    if stage_position[2] >= 488.0 and snake_head_y == self.previous_snake_head_y: 
-        try:
-            list_actions.remove( ['left'] )
-        except:
-            pass
-    if stage_position[2] <= 25.0 and snake_head_y == self.previous_snake_head_y: 
-        try:
-            list_actions.remove( ['right'] )
-        except:
-            pass
+	# ( none, left, down, right, up )
+	# ( 0, 0, 0, 0, 0 )
+	"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    if stage_position[3] <= 25.0 : 
-        try:
-            list_actions.remove( ['down'] )
-        except:
-            pass
-    if stage_position[3] >= 488.0 : 
-        try:
-            list_actions.remove( ['down'] )
-        except:
-            pass
+	stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y )
+	stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([5, ]))], [1], [0]).numpy()[0]
 
-    if stage_position[3] >= 488.0 and snake_head_x == self.previous_snake_head_x: 
-        try:
-            list_actions.remove( ['down'] )
-        except:
-            pass
-    if stage_position[3] <= 25.0 and snake_head_x == self.previous_snake_head_x: 
-        try:
-            list_actions.remove( ['up'] )
-        except:
-            pass
 
-    ( idx_1, idx_2, idx_3, idx_4 ) = ( 0, 0, 0, 0 )
 
-    if ['left'] in list_actions :
-        idx_1 = 1
-    if ['down'] in list_actions :
-        idx_2 = 1
-    if ['right'] in list_actions :
-        idx_3 = 1
-    if ['up'] in list_actions :
-        idx_4 = 1
-	
-    self.previous_snake_head_x = snake_head_x
-    self.previous_snake_head_y = snake_head_y
+	# list_actions = [['left'], ['down'], ['right'], ['up']]
+	# stage_position = ( 0, 5, 5, 512 - 5, 512 - 5 )								# ==> right and up			( 0, 0, 0, 1, 1 )	
+	# stage_position = ( 0, 5, 512, 512 - 5, 512 - 512 )							# ==> right and down		( 0, 0, 1, 1, 0 )	
+	# stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )						# ==> left and down			( 0, 1, 1, 0, 0 )	
+	# stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )							# ==> left and up			( 0, 1, 0, 0, 1 )
 
-    possible_actions = [ 0, idx_1, idx_2, idx_3, idx_4 ]
-
-    return possible_actions
+	return stage_position
 ```
 ## Sample Outputs ##
 
