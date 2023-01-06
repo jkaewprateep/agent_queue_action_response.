@@ -5,7 +5,7 @@ For Study Agent Queue responses, factorials or stateless conditions is almost si
 Stateless requests are your updated messages with conditions within this example the position of food and the snakes compared to rulers, you can have all possible actions return at any point it is possible to do the actions without considering writing equations for game rules ( Gym games and Retro Gym games had actions space that determined ). We are running on PyGame we can read the possible action set but we need to create rules for the game stage within AgentQueue or equations. The AgentQueue is nothing more than removed negative actions as stage rules. In some competitions we see robots keep rotating themselves or running in and out of the corner that is because of the stage rules ( consult referees for match rules ) or you can train robots for rules but they create the ruler's lines on the fields.
 > 👧💬 Referee lines and cameras is the same as width x height that is area explore.
 
-## Staless conditions ##
+## Stateless conditions ##
 
 For solving the problems you need to list down the question challenges 
 1. You cannot hit the wall on any side cause of the new gameplay. 
