@@ -50,7 +50,7 @@ obs = p.getScreenRGB()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 class AgentQueue:
 
-	def __init__( self, PLE, momentum = 0.1, learning_rate = 0.0001, batch_size = 100, epochs=1, actions={ "none_1": K_h, "left_1": K_a, "down_1": K_s, "right1": K_d, "up___1": K_w }):
+	def __init__( self, PLE, momentum = 0.1, learning_rate = 0.001, batch_size = 100, epochs=1, actions={ "none_1": K_h, "left_1": K_a, "down_1": K_s, "right1": K_d, "up___1": K_w }):
 		self.PLE = PLE
 		self.previous_snake_head_x = 0
 		self.previous_snake_head_y = 0
@@ -119,6 +119,7 @@ class AgentQueue:
 		# ( none, left, down, right, up )
 		# ( 0, 0, 0, 0, 0 )
 		"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 		list_actions = [['left'], ['down'], ['right'], ['up']]
 		
 		if stage_position[2] <= 25.0 : 
@@ -168,7 +169,7 @@ class AgentQueue:
 			except:
 				pass
 		###
-
+	
 		( idx_1, idx_2, idx_3, idx_4 ) = ( 0, 0, 0, 0 )
 
 		if ['left'] in list_actions :
@@ -236,26 +237,10 @@ class AgentQueue:
 		coeff_04 = abs( food_x - snake_head_x )
 		coeff_05 = abs( food_y - snake_head_y )
 		
-		# coeff_01 = 1
-		# coeff_02 = 1
-		# coeff_03 = 1
-		# coeff_04 = 1
-		# coeff_05 = 1
-		
 		temp = tf.constant( possible_actions, shape=(5, 1), dtype=tf.float32 )
 		temp = tf.math.multiply(tf.constant([ coeff_01, coeff_02, coeff_03, coeff_04, coeff_05 ], shape=(5, 1), dtype=tf.float32), temp)
 		
-		# print( 'possible_actions: ' )
-		# print( possible_actions )
-		# print( 'temp: ' )
-		# print( temp )
-		# print( tf.math.argmax(temp, axis=0) )
-		
 		action = tf.math.argmax(temp, axis=0)
-		
-		# print( "coeff_01: " + str( coeff_01 ) + " coeff_02: " + str( coeff_02 ) + " coeff_03: " + str( coeff_03 ) + " coeff_04: " + str( coeff_04 ) + " coeff_05: " + str( coeff_05 ) 
-	
-		# )
 		
 		self.action = int(action)
 
@@ -296,15 +281,16 @@ class AgentQueue:
 		
 		self.action = int(tf.math.argmax(predictions[0]))
 		
-		action_from_list = list(actions.values())[self.action]
+		# action_from_list = list(actions.values())[self.action]
 
-		return action_from_list
+		return self.action
 
-	def update_DATA( self, reward, gamescores ):
+	def update_DATA( self, action, reward, gamescores ):
 	
 		self.steps = self.steps + 1
 		self.reward = reward
 		self.gamescores = gamescores
+		self.action = action
 		
 		if self.reward < 0 :
 			self.steps = 0
@@ -318,13 +304,15 @@ class AgentQueue:
 		
 		possible_actions = self.request_possible_action()
 		
+		print( 'possible_actions: ' + str( possible_actions ) )
+		
 		distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
 		
-		contrl = possible_actions[0]
-		contr2 = possible_actions[1]
-		contr3 = possible_actions[2]
-		contr4 = possible_actions[3]
-		contr5 = possible_actions[4]
+		contrl = possible_actions[0] * 5
+		contr2 = possible_actions[1] * 5
+		contr3 = possible_actions[2] * 5
+		contr4 = possible_actions[3] * 5
+		contr5 = possible_actions[4] * 5
 		contr6 = 1
 		contr7 = 1
 		contr8 = 1
@@ -334,8 +322,8 @@ class AgentQueue:
 		contr12 = 1
 		contr13 = 1
 		contr14 = 1
-		contr15 = self.steps * reward
-		contr16 = self.gamescores
+		contr15 = 1
+		contr16 = self.steps + ( 10 * reward )
 		
 		list_input.append( contrl )
 		list_input.append( contr2 )
@@ -357,12 +345,12 @@ class AgentQueue:
 		action_name = list(self.actions.values())[self.action]
 		action_name = [ x for ( x, y ) in self.actions.items() if y == action_name]
 		
-		print( "steps: " + str( self.steps ).zfill(6) + " action: " + str( action_name ) + " contrl: " + str(int(contrl)).zfill(6) + " contr2: " + str(int(contr2)).zfill(6) + " contr3: " +
-			str(int(contr3)).zfill(6) + " contr4: " + str(int(contr4)).zfill(6) + " contr5: " + str(int(contr5)).zfill(6) )
+		# print( "steps: " + str( self.steps ).zfill(6) + " action: " + str( action_name ) + " contrl: " + str(int(contrl)).zfill(6) + " contr2: " + str(int(contr2)).zfill(6) + " contr3: " +
+			# str(int(contr3)).zfill(6) + " contr4: " + str(int(contr4)).zfill(6) + " contr5: " + str(int(contr5)).zfill(6) )
 	
-		print( "steps: " + str( self.steps ).zfill(6) + " gamescores: " + str( self.gamescores ) + " reward: " + str(int( self.reward )).zfill(6)
+		# print( "steps: " + str( self.steps ).zfill(6) + " gamescores: " + str( self.gamescores ) + " reward: " + str(int( self.reward )).zfill(6)
 
-		)
+		# )
 		
 		DATA_row = tf.constant([ list_input ], shape=(1, 1, 1, 16), dtype=tf.float32)	
 
@@ -435,10 +423,13 @@ for i in range(nb_frames):
 	if ( steps == 0 ):
 		print('start ... ')
 
-	reward = p.act( AgentQueue.predict_action() )
+	action = AgentQueue.predict_action()
+	action_from_list = list(actions.values())[action]
+	
+	reward = p.act( action_from_list )
 	gamescores = gamescores + 5 * reward
 	
-	AgentQueue.update_DATA( reward, gamescores )
+	AgentQueue.update_DATA( action, reward, gamescores )
 	
 	if ( reward > 0 ):
 		model = AgentQueue.training()
