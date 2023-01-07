@@ -65,6 +65,7 @@ class AgentQueue:
 		
 		self.actions = { "none_1": K_h, "left_1": K_a, "down_1": K_s, "right1": K_d, "up___1": K_w }
 		self.action = 0
+		self.possible_actions = ( 1, 1, 1, 1, 1 )
 		
 		self.lives = 0
 		self.reward = 0
@@ -103,61 +104,89 @@ class AgentQueue:
 	
 	def request_possible_action( self ):
 	
-	    ( width, height ) = self.PLE.getScreenDims()
+		( width, height ) = self.PLE.getScreenDims()
+		
+		snake_head_x = self.read_current_state( 'snake_head_x' )
+		snake_head_y = self.read_current_state( 'snake_head_y' )
+		self.possible_actions = ( 1, 1, 1, 1, 1 )
+		
+		"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+		# ( width, height, snake_head_x, snake_head_y )
+		# {'none_1': 104, 'left_1': 97, 'down_1': 115, 'right1': 100, 'up___1': 119}
+		
+		# ( none, left, down, right, up )
+		# ( 0, 0, 0, 0, 0 )
+		"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-	    snake_head_x = self.read_current_state( 'snake_head_x' )
-	    snake_head_y = self.read_current_state( 'snake_head_y' )
+		stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y )
+		stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([5, ]))], [1], [0]).numpy()[0]
 
-	    possible_actions = ( 1, 1, 1, 1, 1 )
-	    action = 0
 
-	    stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y )
-	    stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([5, ]))], [1], [0]).numpy()[0]
 
-	    # list_actions = [['left'], ['down'], ['right'], ['up']]
-	    # stage_position = ( 0, 5, 5, 512 - 5, 512 - 5 )		# ==> right and up			( 0, 0, 0, 1, 1 )	
-	    # stage_position = ( 0, 5, 512, 512 - 5, 512 - 512 )	# ==> right and down			( 0, 0, 1, 1, 0 )	
-	    # stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )	# ==> left and down			( 0, 1, 1, 0, 0 )	
-	    # stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )	# ==> left and up			( 0, 1, 0, 0, 1 )
-
-	    if snake_head_x == self.previous_snake_head_x and snake_head_y <= 35 : 
-		stage_position[4] = 0
-	    if snake_head_x == self.previous_snake_head_x and snake_head_y >= 512 - 35 : 
-		stage_position[2] = 0
-
-	    if snake_head_y == self.previous_snake_head_y and snake_head_x <= 35 : 
-		stage_position[3] = 0
-	    if snake_head_y == self.previous_snake_head_y and snake_head_x >= 512 - 35 : 
-		stage_position[1] = 0
-
-	    self.previous_snake_head_x = snake_head_x
-	    self.previous_snake_head_y = snake_head_y
-
-	    return stage_position
+		# list_actions = [['left'], ['down'], ['right'], ['up']]
+		# stage_position = ( 0, 5, 5, 512 - 5, 512 - 5 )								# ==> right and up			( 0, 0, 0, 1, 1 )	
+		# stage_position = ( 0, 5, 512, 512 - 5, 512 - 512 )							# ==> right and down		( 0, 0, 1, 1, 0 )	
+		# stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )						# ==> left and down			( 0, 1, 1, 0, 0 )	
+		# stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )							# ==> left and up			( 0, 1, 0, 0, 1 )
+		
+		if snake_head_x == self.previous_snake_head_x and snake_head_y > self.previous_snake_head_y : 
+			print( "condition 1: moving up" )
+			stage_position[2] = 0
+		if snake_head_x == self.previous_snake_head_x and snake_head_y < self.previous_snake_head_y : 
+			print( "condition 2: moving down" )
+			stage_position[4] = 0
+			
+		if snake_head_y == self.previous_snake_head_y and snake_head_x > self.previous_snake_head_x : 
+			print( "condition 3: moving right" )
+			stage_position[1] = 0
+		if snake_head_y == self.previous_snake_head_y and snake_head_x < self.previous_snake_head_x : 
+			print( "condition 4: moving left" )
+			stage_position[3] = 0
+		
+		self.previous_snake_head_x = snake_head_x
+		self.previous_snake_head_y = snake_head_y
+	
+		return stage_position
 		
 	def	read_current_state( self, string_gamestate ):
 	
 		GameState = self.PLE.getGameState()
 		
+		# print( GameState )
+		# {'snake_head_x': 256.0, 'snake_head_y': 424.6666666666671, 'food_x': 92, 'food_y': 414, 'snake_body': [0.0, 8.518518518518533, 17.037037037037067], 
+		# 'snake_body_pos': [[256.0, 424.6666666666671], [256.0, 416.14814814814855], [256.0, 407.62962962963]]}
+		
 		if string_gamestate in ['snake_head_x']:
-			temp = tf.cast( GameState[string_gamestate], dtype=tf.int32 )
-			temp = tf.cast( temp, dtype=tf.float32 )
-			return temp.numpy()
+			# temp = tf.cast( GameState[string_gamestate], dtype=tf.int32 )
+			# temp = tf.cast( temp, dtype=tf.float32 )
+			
+			temp = 1.0 * GameState[string_gamestate]
+			
+			return temp
 			
 		elif string_gamestate in ['snake_head_y']:
-			temp = tf.cast( 512 - GameState[string_gamestate], dtype=tf.int32 )
-			temp = tf.cast( temp, dtype=tf.float32 )
-			return temp.numpy()
+			# temp = tf.cast( 512 - GameState[string_gamestate], dtype=tf.int32 )
+			# temp = tf.cast( temp, dtype=tf.float32 )
+			
+			temp = 512.0 - GameState[string_gamestate]
+			
+			return temp
 			
 		elif string_gamestate in ['food_x']:
 			temp = tf.cast( GameState[string_gamestate], dtype=tf.int32 )
 			temp = tf.cast( temp, dtype=tf.float32 )
-			return temp.numpy()
+			
+			temp = 1.0 * GameState[string_gamestate]
+			
+			return temp
 			
 		elif string_gamestate in ['food_y']:
-			temp = tf.cast( 512 - GameState[string_gamestate], dtype=tf.int32 )
-			temp = tf.cast( temp, dtype=tf.float32 )
-			return temp.numpy()
+			# temp = tf.cast( 512 - GameState[string_gamestate], dtype=tf.int32 )
+			# temp = tf.cast( temp, dtype=tf.float32 )
+			
+			temp = 512.0 - GameState[string_gamestate]
+			
+			return temp
 			
 		elif string_gamestate in ['snake_body']:
 			temp = tf.zeros([n_blocks * 1, ], dtype=tf.float32)
@@ -202,7 +231,12 @@ class AgentQueue:
 			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True, return_state=False)),
 			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True)),
 			
+			tf.keras.layers.Dense(64, activation='relu'),
+			# tf.keras.layers.Dropout(0.3),
+			tf.keras.layers.Dense(64, activation='relu'),
+			# tf.keras.layers.Dropout(0.3),
 			tf.keras.layers.Dense(256, activation='relu'),
+			# tf.keras.layers.Dropout(0.4),
 		])
 				
 		model.add(tf.keras.layers.Flatten())
@@ -234,11 +268,20 @@ class AgentQueue:
 		
 		self.action = int(tf.math.argmax(predictions[0]))
 		
+		
+		##################### robots action prohibited #####################
+		if ( self.possible_actions[self.action] == 0 ):
+			print( 'conditions robots doing prohibited action' )
+			self.reward = -1
+			self.gamescores = self.gamescores + 5 * self.reward
+			self.update_DATA( self.action, self.reward, self.gamescores, to_action=False )
+		####################################################################
+
 		# action_from_list = list(actions.values())[self.action]
 
 		return self.action
 
-	def update_DATA( self, action, reward, gamescores ):
+	def update_DATA( self, action, reward, gamescores, to_action=True ):
 	
 		self.steps = self.steps + 1
 		self.reward = reward
@@ -255,24 +298,26 @@ class AgentQueue:
 		food_x = self.read_current_state('food_x')
 		food_y = self.read_current_state('food_y')
 		
-		possible_actions = self.request_possible_action()
-		possible_actionname = []
+		if ( to_action ) :
 		
-		list_actions = [['none'], ['left'], ['down'], ['right'], ['up']]
-		
-		for i in range( len( possible_actions ) ) :
-			if possible_actions[i] == 1 :
-				possible_actionname.append( list_actions[i] )
-		
-		print( 'possible_actions: ' + str( possible_actions ) + " to actions: " + str( possible_actionname ) )
+			self.possible_actions = self.request_possible_action()
+			possible_actionname = []
+			
+			list_actions = [['none'], ['left'], ['down'], ['right'], ['up']]
+			
+			for i in range( len( self.possible_actions ) ) :
+				if self.possible_actions[i] == 1 :
+					possible_actionname.append( list_actions[i] )
+			
+			print( 'possible_actions: ' + str( self.possible_actions ) + " to actions: " + str( possible_actionname ) )
 		
 		distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
 		
-		contrl = possible_actions[0] * 5
-		contr2 = possible_actions[1] * 5
-		contr3 = possible_actions[2] * 5
-		contr4 = possible_actions[3] * 5
-		contr5 = possible_actions[4] * 5
+		contrl = snake_head_x
+		contr2 = food_x
+		contr3 = snake_head_y
+		contr4 = food_y 
+		contr5 = 1 
 		contr6 = 1
 		contr7 = 1
 		contr8 = 1
@@ -281,9 +326,9 @@ class AgentQueue:
 		contr11 = 1
 		contr12 = 1
 		contr13 = 1
-		contr14 = snake_head_x - food_x
-		contr15 = snake_head_y - food_y
-		contr16 = self.steps + gamescores
+		contr14 = 1
+		contr15 = 1
+		contr16 = self.gamescores
 		
 		list_input.append( contrl )
 		list_input.append( contr2 )
@@ -379,9 +424,6 @@ for i in range(nb_frames):
 		lives = 0
 		reward = 0
 		gamescores = 0
-		
-	if ( steps == 0 ):
-		print('start ... ')
 
 	action = AgentQueue.predict_action()
 	action_from_list = list(actions.values())[action]
@@ -391,7 +433,7 @@ for i in range(nb_frames):
 	reward = p.act( action_from_list )
 	gamescores = gamescores + 5 * reward
 	
-	AgentQueue.update_DATA( action, reward, gamescores )
+	AgentQueue.update_DATA( action, reward, gamescores, to_action=True )
 	
 	if ( reward > 0 ):
 		model = AgentQueue.training()
