@@ -95,11 +95,11 @@ Seleted: ('right1', 100)
 Simply controls AI selected move actions, continuous number is primary when using internal sequence summary ``` self.steps + gamescores ``` and input possible actions with conditions ```snake_head_x - food_x``` and ```snake_head_y - food_y``` .
 
 ```
-contrl = possible_actions[0] * 5
-contr2 = possible_actions[1] * 5
-contr3 = possible_actions[2] * 5
-contr4 = possible_actions[3] * 5
-contr5 = possible_actions[4] * 5
+contrl = snake_head_x
+contr2 = food_x
+contr3 = snake_head_y
+contr4 = food_y 
+contr5 = 1 
 contr6 = 1
 contr7 = 1
 contr8 = 1
@@ -108,9 +108,9 @@ contr10 = 1
 contr11 = 1
 contr12 = 1
 contr13 = 1
-contr14 = snake_head_x - food_x
-contr15 = snake_head_y - food_y
-contr16 = self.steps + gamescores
+contr14 = 1
+contr15 = 1
+contr16 = self.steps + self.reward
 ```
 
 ## Tasks Running ##
