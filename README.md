@@ -76,16 +76,18 @@ def request_possible_action( self ):
 It is possible to send the stage rules to AI but it is AI decisions where you applied scores based, time scales, or algorithms and it is no guarantee that AI will follow your rules the AI will select from their learing not fixed conditions that is valid in the competitions.
 
 ```
-possible_actions: [0, 1, 1, 1, 1]
-possible_actions: [0, 1, 1, 1, 1]
-possible_actions: [0, 1, 1, 1, 1]
-possible_actions: [0, 1, 1, 1, 1]
-possible_actions: [0, 1, 1, 1, 1]
-possible_actions: [0, 1, 0, 1, 1]
-possible_actions: [0, 1, 0, 1, 1]
-possible_actions: [0, 1, 0, 1, 1]
-possible_actions: [0, 1, 0, 1, 1]
-possible_actions: [0, 1, 0, 1, 1]
+possible_actions: [0 0 1 1 1] to actions: [['down'], ['right'], ['up']]
+Seleted: ('right1', 100)
+condition 3: moving right
+possible_actions: [0 0 1 1 1] to actions: [['down'], ['right'], ['up']]
+Seleted: ('right1', 100)
+condition 3: moving right
+possible_actions: [0 0 1 1 1] to actions: [['down'], ['right'], ['up']]
+Seleted: ('right1', 100)
+condition 3: moving right
+possible_actions: [0 0 1 0 1] to actions: [['down'], ['up']]
+conditions robots doing prohibited action
+Seleted: ('right1', 100)
 ```
 
 ## Controls ##
