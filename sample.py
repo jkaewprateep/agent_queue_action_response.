@@ -228,14 +228,14 @@ class AgentQueue:
 		model = tf.keras.models.Sequential([
 			tf.keras.layers.InputLayer(input_shape=input_shape),
 			
-			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True, return_state=False)),
-			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True)),
+			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(256, return_sequences=True, return_state=False)),
+			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(256, return_sequences=True)),
 			
-			tf.keras.layers.Dense(64, activation='relu'),
+			# tf.keras.layers.Dense(512, activation='relu'),
 			# tf.keras.layers.Dropout(0.3),
-			tf.keras.layers.Dense(64, activation='relu'),
+			# tf.keras.layers.Dense(128, activation='relu'),
 			# tf.keras.layers.Dropout(0.3),
-			tf.keras.layers.Dense(256, activation='relu'),
+			# tf.keras.layers.Dense(128, activation='relu'),
 			# tf.keras.layers.Dropout(0.4),
 		])
 				
@@ -288,15 +288,17 @@ class AgentQueue:
 		self.gamescores = gamescores
 		self.action = action
 		
-		if self.reward < 0 :
-			self.steps = 0
-		
 		list_input = []
 	
 		snake_head_x = self.read_current_state('snake_head_x')
 		snake_head_y = self.read_current_state('snake_head_y')
 		food_x = self.read_current_state('food_x')
 		food_y = self.read_current_state('food_y')
+		
+		if self.reward < 0 :
+			self.steps = 0
+			self.previous_snake_head_x = snake_head_x
+			self.previous_snake_head_y = snake_head_y
 		
 		if ( to_action ) :
 		
@@ -313,6 +315,15 @@ class AgentQueue:
 		
 		distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
 		
+		upper_space = 512 - snake_head_y
+		right_space = 512 - snake_head_x
+		
+		# should be usable
+		# contrl = upper_space
+		# contr2 = snake_head_x - food_x
+		# contr3 = right_space
+		# contr4 = snake_head_y - food_y 
+		
 		contrl = snake_head_x
 		contr2 = food_x
 		contr3 = snake_head_y
@@ -328,7 +339,7 @@ class AgentQueue:
 		contr13 = 1
 		contr14 = 1
 		contr15 = 1
-		contr16 = self.gamescores
+		contr16 = self.steps + self.reward
 		
 		list_input.append( contrl )
 		list_input.append( contr2 )
@@ -424,6 +435,9 @@ for i in range(nb_frames):
 		lives = 0
 		reward = 0
 		gamescores = 0
+		
+	# if ( steps == 0 ):
+		# print('start ... ')
 
 	action = AgentQueue.predict_action()
 	action_from_list = list(actions.values())[action]
