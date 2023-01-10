@@ -50,7 +50,7 @@ obs = p.getScreenRGB()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 class AgentQueue:
 
-	def __init__( self, PLE, momentum = 0.1, learning_rate = 0.001, batch_size = 100, epochs=1, actions={ "none_1": K_h, "left_1": K_a, "down_1": K_s, "right1": K_d, "up___1": K_w }):
+	def __init__( self, PLE, momentum = 0.1, learning_rate = 0.001, batch_size = 500, epochs=1, actions={ "none_1": K_h, "left_1": K_a, "down_1": K_s, "right1": K_d, "up___1": K_w }):
 		self.PLE = PLE
 		self.previous_snake_head_x = 0
 		self.previous_snake_head_y = 0
@@ -59,7 +59,7 @@ class AgentQueue:
 		self.learning_rate = learning_rate
 		self.batch_size = batch_size
 		self.epochs = epochs
-		self.optimizer = tf.keras.optimizers.SGD( learning_rate=self.learning_rate, momentum=self.momentum, nesterov=False, name='SGD', )
+		self.optimizer = tf.keras.optimizers.SGD( learning_rate=self.learning_rate, momentum=self.momentum, nesterov=True, name='SGD', )
 		self.lossfn = tf.keras.losses.MeanSquaredLogarithmicError(reduction=tf.keras.losses.Reduction.AUTO, name='mean_squared_logarithmic_error')
 		self.history = []
 		
@@ -102,24 +102,32 @@ class AgentQueue:
 	
 		return
 	
+	def reset_scores( self ):
+		
+		self.steps = 0
+		self.previous_snake_head_x = 0
+		self.previous_snake_head_y = 0
+		
+		return
+	
 	def request_possible_action( self ):
 	
 		( width, height ) = self.PLE.getScreenDims()
 		
 		snake_head_x = self.read_current_state( 'snake_head_x' )
 		snake_head_y = self.read_current_state( 'snake_head_y' )
-		self.possible_actions = ( 1, 1, 1, 1, 1 )
+		self.possible_actions = ( 1, 1, 1, 1, 1, 1 )
 		
 		"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 		# ( width, height, snake_head_x, snake_head_y )
 		# {'none_1': 104, 'left_1': 97, 'down_1': 115, 'right1': 100, 'up___1': 119}
 		
-		# ( none, left, down, right, up )
-		# ( 0, 0, 0, 0, 0 )
+		# ( none, left, down, right, up, upper / lower )
+		# ( 0, 0, 0, 0, 0, 0 )
 		"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-		stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y )
-		stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([5, ]))], [1], [0]).numpy()[0]
+		stage_position = ( 0, snake_head_x, snake_head_y, 512 - snake_head_x, 512 - snake_head_y, 0 )
+		stage_position = tf.where([tf.math.greater_equal(stage_position, 35 * tf.ones([6, ]))], [1], [0]).numpy()[0]
 
 
 
@@ -129,18 +137,39 @@ class AgentQueue:
 		# stage_position = ( 0, 512, 512, 512 - 512, 512 - 512 )						# ==> left and down			( 0, 1, 1, 0, 0 )	
 		# stage_position = ( 0, 512, 5, 512 - 512, 512 - 5 )							# ==> left and up			( 0, 1, 0, 0, 1 )
 		
+		
+		### upper path ###
+		
 		if snake_head_x == self.previous_snake_head_x and snake_head_y > self.previous_snake_head_y : 
-			print( "condition 1: moving up" )
-			stage_position[2] = 0
-		if snake_head_x == self.previous_snake_head_x and snake_head_y < self.previous_snake_head_y : 
-			print( "condition 2: moving down" )
-			stage_position[4] = 0
+			print( "step: " + str( self.steps ).zfill(6) + " condition 1: moving up " + "gamescores: " + str( self.gamescores ).zfill(6) )
 			
+			stage_position[2] = 0
+			stage_position = tf.where([tf.math.greater(stage_position, tf.zeros([6, ]))], [0], [1]).numpy()[0]
+			stage_position[5] = -1
+			
+		### lower path ###	
+			
+		if snake_head_x == self.previous_snake_head_x and snake_head_y < self.previous_snake_head_y : 
+			print( "step: " + str( self.steps ).zfill(6) + " condition 2: moving down " + "gamescores: " + str( self.gamescores ).zfill(6) )
+
+			stage_position[5] = -1
+			stage_position[4] = 0
+		
+		### lower path ###
+		
 		if snake_head_y == self.previous_snake_head_y and snake_head_x > self.previous_snake_head_x : 
-			print( "condition 3: moving right" )
+			print( "step: " + str( self.steps ).zfill(6) + " condition 3: moving right " + "gamescores: " + str( self.gamescores ).zfill(6) )
+			
 			stage_position[1] = 0
+			stage_position = tf.where([tf.math.greater(stage_position, tf.zeros([6, ]))], [0], [1]).numpy()[0]
+			stage_position[5] = -1
+			
+		### upper path ###	
+			
 		if snake_head_y == self.previous_snake_head_y and snake_head_x < self.previous_snake_head_x : 
-			print( "condition 4: moving left" )
+			print( "step: " + str( self.steps ).zfill(6) + " condition 4: moving left " + "gamescores: " + str( self.gamescores ).zfill(6) )
+			
+			stage_position[5] = -1
 			stage_position[3] = 0
 		
 		self.previous_snake_head_x = snake_head_x
@@ -173,8 +202,8 @@ class AgentQueue:
 			return temp
 			
 		elif string_gamestate in ['food_x']:
-			temp = tf.cast( GameState[string_gamestate], dtype=tf.int32 )
-			temp = tf.cast( temp, dtype=tf.float32 )
+			# temp = tf.cast( GameState[string_gamestate], dtype=tf.int32 )
+			# temp = tf.cast( temp, dtype=tf.float32 )
 			
 			temp = 1.0 * GameState[string_gamestate]
 			
@@ -228,8 +257,10 @@ class AgentQueue:
 		model = tf.keras.models.Sequential([
 			tf.keras.layers.InputLayer(input_shape=input_shape),
 			
-			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(256, return_sequences=True, return_state=False)),
-			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(256, return_sequences=True)),
+			tf.keras.layers.Dense(512, activation='relu'),
+			
+			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(644, return_sequences=True, return_state=False)),
+			tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(644, return_sequences=True)),
 			
 			# tf.keras.layers.Dense(512, activation='relu'),
 			# tf.keras.layers.Dropout(0.3),
@@ -272,8 +303,8 @@ class AgentQueue:
 		##################### robots action prohibited #####################
 		if ( self.possible_actions[self.action] == 0 ):
 			print( 'conditions robots doing prohibited action' )
-			self.reward = -1
-			self.gamescores = self.gamescores + 5 * self.reward
+			self.reward = -100
+			self.gamescores = self.gamescores + self.reward
 			self.update_DATA( self.action, self.reward, self.gamescores, to_action=False )
 		####################################################################
 
@@ -288,18 +319,14 @@ class AgentQueue:
 		self.gamescores = gamescores
 		self.action = action
 		
+		
 		list_input = []
 	
 		snake_head_x = self.read_current_state('snake_head_x')
 		snake_head_y = self.read_current_state('snake_head_y')
 		food_x = self.read_current_state('food_x')
 		food_y = self.read_current_state('food_y')
-		
-		if self.reward < 0 :
-			self.steps = 0
-			self.previous_snake_head_x = snake_head_x
-			self.previous_snake_head_y = snake_head_y
-		
+
 		if ( to_action ) :
 		
 			self.possible_actions = self.request_possible_action()
@@ -307,16 +334,21 @@ class AgentQueue:
 			
 			list_actions = [['none'], ['left'], ['down'], ['right'], ['up']]
 			
-			for i in range( len( self.possible_actions ) ) :
+			for i in range( len( self.possible_actions ) - 1 ) :
 				if self.possible_actions[i] == 1 :
-					possible_actionname.append( list_actions[i] )
+					possible_actionname.append( list_actions[i] ) 
+				
+			if self.possible_actions[5] == 1 :
+				possible_actionname.append( ['upper'] )
+			elif self.possible_actions[5] == -1 :
+				possible_actionname.append( ['lower'] )
 			
 			print( 'possible_actions: ' + str( self.possible_actions ) + " to actions: " + str( possible_actionname ) )
 		
-		distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
+		# distance = ( ( abs( snake_head_x - food_x ) + abs( snake_head_y - food_y ) + abs( food_x - snake_head_x ) + abs( food_y - snake_head_y ) ) / 4 )
 		
-		upper_space = 512 - snake_head_y
-		right_space = 512 - snake_head_x
+		# upper_space = 512 - snake_head_y
+		# right_space = 512 - snake_head_x
 		
 		# should be usable
 		# contrl = upper_space
@@ -324,10 +356,13 @@ class AgentQueue:
 		# contr3 = right_space
 		# contr4 = snake_head_y - food_y 
 		
-		contrl = snake_head_x
-		contr2 = food_x
-		contr3 = snake_head_y
-		contr4 = food_y 
+		# distance_x = abs( snake_head_x - food_x )
+		# distance_y = abs( snake_head_y - food_y )
+		
+		contrl = food_x
+		contr2 = snake_head_x
+		contr3 = food_y
+		contr4 = snake_head_y
 		contr5 = 1 
 		contr6 = 1
 		contr7 = 1
@@ -338,8 +373,8 @@ class AgentQueue:
 		contr12 = 1
 		contr13 = 1
 		contr14 = 1
-		contr15 = 1
-		contr16 = self.steps + self.reward
+		contr15 = int( self.gamescores )
+		contr16 = int( self.steps )
 		
 		list_input.append( contrl )
 		list_input.append( contr2 )
@@ -378,8 +413,11 @@ class AgentQueue:
 		
 		self.DATA = self.DATA[-500:,:,:,:]
 		self.LABEL = self.LABEL[-500:,:,:,:]
-	
-		return self.DATA, self.LABEL, self.steps
+
+		if self.steps % 5 == 0 :
+			self.gamescores = self.gamescores + 1
+		
+		return self.DATA, self.LABEL, self.steps, self.gamescores
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 : Callback
@@ -435,6 +473,7 @@ for i in range(nb_frames):
 		lives = 0
 		reward = 0
 		gamescores = 0
+		AgentQueue.reset_scores()
 		
 	# if ( steps == 0 ):
 		# print('start ... ')
@@ -445,14 +484,14 @@ for i in range(nb_frames):
 	print( "Seleted: " + str( list(actions.items())[action] ) )
 	
 	reward = p.act( action_from_list )
-	gamescores = gamescores + 5 * reward
+	gamescores = gamescores + ( 200 * reward )
 	
-	AgentQueue.update_DATA( action, reward, gamescores, to_action=True )
+	DATA, LABEL, steps, gamescores = AgentQueue.update_DATA( action, reward, gamescores, to_action=True )
 	
 	if ( reward > 0 ):
 		model = AgentQueue.training()
 		
-	if ( steps % 500 == 0 ):
+	if ( steps % 20 == 0 ):
 		model = AgentQueue.training()
 		
 input('...')
